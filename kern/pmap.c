@@ -90,16 +90,19 @@ boot_alloc(uint32_t n)
 	// to any kernel code or global variables.
 	if (!nextfree) {
 		extern char end[];
-		nextfree = ROUNDUP((char *) end, PGSIZE);
+		nextfree = ROUNDUP((char *) end, PGSIZE); //向上取(对齐4096)的整数,end必须强转为byte型地址(char *型)
+		result = nextfree;
+	}else{
+		result = nextfree;
 	}
 
 	// Allocate a chunk large enough to hold 'n' bytes, then update
 	// nextfree.  Make sure nextfree is kept aligned
 	// to a multiple of PGSIZE.
 	//
-	// LAB 2: Your code here.
-
-	return NULL;
+	// LAB 2: My code here.
+	nextfree = nextfree + ROUNDUP(n,PGSIZE); //向上取整(对齐4096),增加nextfree,相当于allocate了内存
+	return result;
 }
 
 // Set up a two-level page table:
@@ -144,7 +147,10 @@ mem_init(void)
 	// array.  'npages' is the number of physical pages in memory.  Use memset
 	// to initialize all fields of each struct PageInfo to 0.
 	// Your code goes here:
-
+	
+	// wrong :    ---->  //page = (struct PageInfo *)boot_alloc(npages*PGSIZE);
+	page = (struct PageInfo *)boot_alloc(sizeof(struct PageInfo) * npages);
+	memset(page, 0, npages*sizeof(struct PageINfo));
 
 	//////////////////////////////////////////////////////////////////////
 	// Now that we've allocated the initial kernel data structures, we set
