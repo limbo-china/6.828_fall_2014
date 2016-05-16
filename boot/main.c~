@@ -38,6 +38,8 @@ void readseg(uint32_t, uint32_t, uint32_t);
 void
 bootmain(void)
 {
+unsigned int i = 0x00646c72;
+    cprintf("H%x Wo%s", 57616, &i);
 
 	struct Proghdr *ph, *eph;
 
